@@ -19,6 +19,13 @@ validations.login = [
     body('password')
     .notEmpty().withMessage('Debe ingresar una contraseña')
 ];
+validations.signup = [
+    body('email').trim()
+    .notEmpty().withMessage('Debe ingresar un email').bail()
+    .isEmail().withMessage('Debe ingresar un email válido'),
+    body('password')
+    .notEmpty().withMessage('Debe ingresar una contraseña')
+];
 
 validations.getByEmail = [
     body('token').trim()
