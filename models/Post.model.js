@@ -4,6 +4,7 @@ const Post = sequelize.define('Post', {
     likes: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        defaultValue: 0
     },
     post_date: {
         type: DataTypes.DATEONLY,
@@ -15,12 +16,11 @@ const Post = sequelize.define('Post', {
         allowNull: false
     },
     description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
     },
     location: {
         type: DataTypes.STRING,
-        allowNull: false
     },
     complete: {
         type: DataTypes.TINYINT,
@@ -29,6 +29,16 @@ const Post = sequelize.define('Post', {
         validate: {
             max: 2
         }
+    },
+    reported: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue:0
+    }
+},
+{
+    defaultScope:{
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
     }
 });
 module.exports = Post

@@ -24,8 +24,7 @@ const User = sequelize.define('User', {
         type: DataTypes.DATEONLY,
     },
     location: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     photo: {
         type: DataTypes.STRING,
@@ -63,6 +62,27 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    // Se piensa tener rol de usuario y de admin
+    role: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        defaultValue: "ROLE_USER" 
+    }
+},
+{
+    defaultScope: {
+        attributes: {
+            exclude: ['createdAt', 'updatedAt', 'password']
+        }
+    },
+    scopes:{
+        publisher: {
+            attributes: ['username', 'id', 'reported', 'banned']
+        },
+        withPassword: {
+            exclude: ['createdAt', 'updatedAt']
+        }
     }
 });
 

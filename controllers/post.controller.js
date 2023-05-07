@@ -1,15 +1,141 @@
-const publicacionController = {}
-var publicaciones = {
+const postController = {}
+const {message} = require('../utils/utils')
+const Post = require('../models/Post.model')
+const Photo = require('../models/Photo.model')
+const User = require('../models/User.model')
+const { Op } = require('sequelize')
+const debug = require('debug')("app:post-controller")
 
+postController.getAll = async (req, res) => {
+    try {
+        let posts = await Post.findAll({
+            include: [
+                {
+                    model: User.scope('publisher'),
+                    as: "publisher"
+                },
+                "photos"
+            ],
+        })
+    
+        // mapear lista de fotos
+        let _posts = posts.map(post => {
+            let photos = post.photos.map(photo => {
+                return photo.photo
+            })
+            return {...post.dataValues, photos}
+        })
+        res.status(200).json(_posts)
+    } catch(e) {
+        debug(e)
+        res.status(500).json(message('Error interno', false))
+    }
 }
-publicacionController.publish = (req, res) => {
-    let { title, description } = req.body
-    let { photo } = res
+postController.searchByTitleOrDescription = async (req, res) => {
+    try {
+        let {search} = req.params
+        let posts = await Post.findAll({
+            include: [
+                {
+                    model: User.scope('publisher'),
+                    as: "publisher"
+                },
+                "photos"
+            ],
+            where: {
+                [Op.or]: [
+                    {
+                        title: {
+                            [Op.like]: `%${search}%`
+                        }
+                    },
+                    {
+                        description: {
+                            [Op.like]: `%${search}%`
+                        }
+                    }
+                ]
+            }
+        })
+    
+        // mapear lista de fotos
+        let _posts = posts.map(post => {
+            let photos = post.photos.map(photo => {
+                return photo.photo
+            })
+            return {...post.dataValues, photos}
+        })
+        res.status(200).json(_posts)
+    } catch(e) {
+        debug(e)
+        res.status(500).json(message('Error interno', false))
+    }
+}
+postController.publish = async (req, res, next) => {
+    let { id, title, description, location } = req.body
+    try {
+        // Guardar post en la base de datos
+        const post = await Post.create({
+            user_id: id,
+            title,
+            description,
+            location
+        })
+        // enviamos el id del post al siguiente middleware
+        res.post_id = post.dataValues.id
 
-    // Guardar en la base de datos
-    console.log(title, description, photo)
+        next()
+    } catch(e) {
+        debug(e)
+        return res.status(500).json(message("Error interno", false))
+    }
+}
+postController.uploadPhotos = async (req, res) => {
+    try {
+        let { URIs, post_id } = res
+        const records = URIs.map(photo => {
+            return {
+                photo,
+                post_id
+            }
+        })
+        await Photo.bulkCreate(records)
+        return res.status(200).json(message("Post subido", true))
 
-    return res.status(200).send()
+    } catch(e) {
+        debug(e)
+        return res.status(500).json(message("Error interno", false))
+    }
 }
 
-module.exports = publicacionController
+postController.delete = async (req, res) => {
+    try{
+        let {id} = req.body
+        await Post.destroy({
+            where:{
+                id
+            }
+        })
+        return res.status(200).json(message("Eliminado", true))
+    } catch(e) {
+        debug(e)
+        return res.status(500).json(message("Error interno", false))
+    }
+}
+
+postController.report = async (req, res) => {
+    try {
+        let {id} = req.body
+        await Post.increment('reported', {
+            by: 1,
+            where: {
+                id
+            }
+        })
+        return res.status(200).json(message("Post reportado", true))
+    } catch(e) {
+        debug(e)
+        return res.status(500).json(message("Error interno", false))
+    }
+}
+module.exports = postController
