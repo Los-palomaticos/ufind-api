@@ -17,9 +17,11 @@ require('./config/cloudinary.config');
 // connectar base de datos
 const {connect} = require('./config/mysql.config');
 connect()
+require('./test')
 
 // crear tablas
-require('./config/createDB.config')
+//corer una vez y luego comentar
+//require('./config/createDB.config')
 
 app.use(logger('dev'));
 app.use(express.json());
