@@ -24,7 +24,9 @@ validations.signup = [
     .notEmpty().withMessage('Debe ingresar un email').bail()
     .isEmail().withMessage('Debe ingresar un email válido'),
     body('password')
-    .notEmpty().withMessage('Debe ingresar una contraseña')
+    .notEmpty().withMessage('Debe ingresar una contraseña'),
+    body('username')
+    .notEmpty().withMessage('Debe ingresar una Username')
 ];
 
 validations.getByEmail = [
