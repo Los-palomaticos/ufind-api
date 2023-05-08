@@ -19,6 +19,7 @@ validations.login = [
     body('password')
     .notEmpty().withMessage('Debe ingresar una contraseña')
 ];
+
 validations.signup = [
     body('email').trim()
     .notEmpty().withMessage('Debe ingresar un email').bail()
@@ -27,6 +28,19 @@ validations.signup = [
     .notEmpty().withMessage('Debe ingresar una contraseña'),
     body('username')
     .notEmpty().withMessage('Debe ingresar una Username')
+];
+
+validations.edituser = [
+    body('id')
+    .notEmpty().withMessage('Debe ingresar una id'),
+    body('username').custom(username=> {
+        if (!username)
+            return true
+        if (username == "")
+            return false
+        return true
+    }).withMessage('El campo de usuario no puede ir vacio')
+    
 ];
 
 validations.getByEmail = [

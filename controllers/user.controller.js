@@ -57,8 +57,28 @@ userController.signup = async (req, res) => {
     }
 };
 
-userController.edituser = (req, res) => {
-    res.status(500).json({ message: 'Ocurrió un error al registrarse' });
-};
+
+
+userController.edituser = async (req, res) => {
+    try {
+     
+      const {id} =req.body;
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).json({ message: 'El usuario no existe.' });
+      }
+      
+        await User.update({ ...req.body}, {    
+        where: {
+            id
+        }      
+      });
+     
+      res.json({ message: 'El usuario ha sido actualizado.' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Ocurrió un error al actualizar el usuario.' });
+    }
+}   
 
 module.exports = userController;
