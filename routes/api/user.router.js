@@ -17,8 +17,10 @@ UserValidations.signup,
  userController.signup
  )
 
- router.post('/edituser',
- userController.edituser
+ router.put('/edituser',
+ UserValidations.edituser,
+    runValidations,
+   userController.edituser
  )
 
 module.exports = router;
