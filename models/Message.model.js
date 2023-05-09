@@ -6,5 +6,9 @@ const Message = sequelize.define('Message', {
         type: DataTypes.STRING,
         allowNull: false
     }
+},{
+    defaultScope:{
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+    }
 });
 module.exports = Message
