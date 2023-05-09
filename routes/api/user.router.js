@@ -23,4 +23,10 @@ UserValidations.signup,
    userController.edituser
  )
 
+ router.put('/changepassword',
+ UserValidations.changepassword,
+    runValidations,
+   userController.changepassword
+ )
+
 module.exports = router;
