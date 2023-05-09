@@ -9,6 +9,16 @@ const Photo = sequelize.define('Photo', {
             isUrl: true
         }
     }
+},
+{
+    defaultScope:{
+        attributes: { exclude: ['createdAt', 'updatedAt', 'post_id'] },
+    },
+    scopes: {
+        noId: {
+            attributes: ['photo']
+        }
+    }
 });
 
 module.exports = Photo;
