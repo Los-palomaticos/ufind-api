@@ -42,6 +42,11 @@ validations.edituser = [
     }).withMessage('El campo de usuario no puede ir vacio')
     
 ];
+validations.changepassword = [
+    body('id')
+    .notEmpty().withMessage('Debe ingresar una id'),
+
+];
 
 validations.getByEmail = [
     body('token').trim()
