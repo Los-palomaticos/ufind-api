@@ -6,6 +6,8 @@ const userController = require('../../controllers/user.controller')
 /* GET users listing. */
 router.get('/', userController.getUser)
 
+router.get('/getUserBanneds', userController.getUserBanneds)
+
 router.post('/login', 
 UserValidations.login,
 runValidations,
@@ -28,5 +30,9 @@ UserValidations.signup,
     runValidations,
    userController.changepassword
  )
+ router.put('/bannedusers',
+   userController.bannedusers
+ )
+ 
 
 module.exports = router;

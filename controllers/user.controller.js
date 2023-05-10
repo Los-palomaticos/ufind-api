@@ -4,6 +4,13 @@ const jwt = require('jsonwebtoken');
 
 const userController = {};
 
+/**
+ * Documentado codigo
+ * @param {string} req 
+ * @param {boolean} res 
+ * Hecho por Salvador
+ * @function
+ */
 userController.getUser = async (req, res) => {
     const users = await User.findAll({
         attributes: { exclude: ['password'] }
@@ -57,8 +64,6 @@ userController.signup = async (req, res) => {
     }
 };
 
-
-
 userController.edituser = async (req, res) => {
     try {
      
@@ -66,6 +71,7 @@ userController.edituser = async (req, res) => {
       const user = await User.findByPk(id);
       if (!user) {
         return res.status(404).json({ message: 'El usuario no existe.' });
+    
       }
       
         await User.update({ ...req.body}, {    
@@ -89,7 +95,7 @@ userController.changepassword = async (req, res) => {
         return res.status(404).json({ message: 'El usuario no existe.' });
       }
       if (!req.body.password){
-    return res.status(404).json({ message: 'Hay un campo que no puede ir vacio.' });
+    return res.status(404).json({ message: 'La contraseña  no puede ir vacía.' });
     }
     const saltRounds = 10;
     const {password} =req.body;
@@ -100,11 +106,43 @@ userController.changepassword = async (req, res) => {
         }      
       });
      
-      res.json({ message: 'El usuario ha sido actualizado.' });
+      res.json({ message: 'La contraseña ha sido actualizada.' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Ocurrió un error al actualizar el usuario.' });
+      res.status(500).json({ message: 'Ocurrió un error al actualizar la contraseña.' });
     }
 }   
-
+userController.bannedusers = async (req, res) => {
+    //SI EL USUARIO ES ADMIN PUEDE BANEAR, LOS DEMAS NO
+    //al token hay que ponerle admin id
+    try {
+        
+        const {id} =req.body;
+        const user = await User.findByPk(id);
+        if (!user) {
+          return res.status(404).json({ message: 'El usuario no existe.' });
+        }
+        
+          await User.update({banned:1}, {    
+          where: {
+              id
+          }      
+        });
+       
+        res.json({ message: 'El usuario ha sido baneado.' });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Ocurrió un error al actualizar el usuario.' });
+      }
+}    
+userController.getUserBanneds = async (req, res) => {
+    const users = await User.findAll({
+        where:{
+            banned: 1
+        }
+        
+    });
+    res.send(users);
+};
+//ruta wallet
 module.exports = userController;

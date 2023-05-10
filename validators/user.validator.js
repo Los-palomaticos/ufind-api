@@ -36,8 +36,6 @@ validations.edituser = [
     body('username').custom(username=> {
         if (!username)
             return true
-        if (username == "")
-            return false
         return true
     }).withMessage('El campo de usuario no puede ir vacio')
     
