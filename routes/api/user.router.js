@@ -34,5 +34,6 @@ UserValidations.signup,
    userController.bannedusers
  )
  
+ 
 
 module.exports = router;
