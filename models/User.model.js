@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const { sequelize } = require('../config/mysql.config')
+const roles = require('../data/role.data')
 const User = sequelize.define('User', {
     username: {
         type: DataTypes.STRING(100),
@@ -67,7 +68,11 @@ const User = sequelize.define('User', {
     role: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        defaultValue: "ROLE_USER" 
+        defaultValue: roles.USER
+    },
+    // tokens para que pueda ser autenticado, duracion de 1 dia
+    token: {
+        type: DataTypes.TEXT
     }
 },
 {

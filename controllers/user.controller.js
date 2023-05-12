@@ -1,6 +1,6 @@
 const User = require('../models/User.model');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const {getToken, validateToken} = require('../utils/utils')
 
 const userController = {};
 
@@ -14,7 +14,7 @@ userController.getUser = async (req, res) => {
 userController.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ where: { email: email } });
+        const user = await User.scope('withPassword').findOne({ where: { email: email } });
 
         if (!user) {
             return res.status(400).json({ message: 'Credenciales erroneas' });
@@ -23,8 +23,15 @@ userController.login = async (req, res) => {
         const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (passwordMatch) {
-            await user.save();
-            return res.status(200).json({ message: 'Correo Aceptado' });
+            const token = getToken(user);
+            console.log(user.token)
+            user.token = token;
+            console.log(token, user.token)
+            user.save()
+            // await user.update('token', token, {
+            //     where: {email}
+            // })
+            return res.status(200).json({token});
         } else {
             res.status(400).json({ message: 'Credenciales erroneas' });
             return;
@@ -48,8 +55,11 @@ userController.signup = async (req, res) => {
 
         const hash = await bcrypt.hash(password, saltRounds);
         const newUser = await User.create({ email, password: hash, location, username });
+        const token = getToken(newUser);
+        newUser.token = token;
+        await newUser.save();
 
-        res.status(201).json(newUser);
+        res.status(200).json({token});
         return;
     } catch (error) {
         console.error(error);
@@ -62,7 +72,7 @@ userController.signup = async (req, res) => {
 userController.edituser = async (req, res) => {
     try {
      
-      const {id} =req.body;
+      const {id} = req.body;
       const user = await User.findByPk(id);
       if (!user) {
         return res.status(404).json({ message: 'El usuario no existe.' });
