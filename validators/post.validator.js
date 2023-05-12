@@ -14,8 +14,6 @@ validations.publish = [
         }
         return false
     }).withMessage("Debe proveer al menos una imagen"),
-    body("id")
-    .notEmpty().trim().withMessage("No tiene autorización"),
     body("title")
     .notEmpty().trim().withMessage("La publicacion debe tener un titulo"),
     body("description")
