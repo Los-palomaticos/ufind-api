@@ -1,11 +1,11 @@
-const postController = {}
-const {message} = require('../utils/utils')
-const Post = require('../models/Post.model')
-const Photo = require('../models/Photo.model')
-const User = require('../models/User.model')
-const { Op } = require('sequelize')
-const debug = require('debug')("app:post-controller")
-
+const postController = {};
+const {message} = require('../utils/utils');
+const Post = require('../models/Post.model');
+const Photo = require('../models/Photo.model');
+const User = require('../models/User.model');
+const { Op } = require('sequelize');
+const debug = require('debug')("app:post-controller");
+const roles = require('../data/role.data');
 postController.getAll = async (req, res) => {
     try {
         let posts = await Post.findAll({
@@ -72,11 +72,12 @@ postController.searchByTitleOrDescription = async (req, res) => {
     }
 }
 postController.publish = async (req, res, next) => {
-    let { id, title, description, location } = req.body
+    let {user} = res;
+    let {title, description, location} = req.body
     try {
         // Guardar post en la base de datos
         const post = await Post.create({
-            user_id: id,
+            user_id: user.id,
             title,
             description,
             location
@@ -110,13 +111,24 @@ postController.uploadPhotos = async (req, res) => {
 
 postController.delete = async (req, res) => {
     try{
-        let {id} = req.body
-        await Post.destroy({
-            where:{
-                id
+        let {role} = res.user;
+        let user_id = res.user.id
+        let {id} = req.body;
+        let condicion = {}
+        condicion.id = id;
+
+        if (role != roles.ADMIN)
+            condicion.user_id = user_id
+
+        const deleted = await Post.destroy({
+            where: {
+                [Op.and]: [condicion]
             }
-        })
-        return res.status(200).json(message("Eliminado", true))
+        });
+        if (!deleted)
+            return res.status(401).json(message("No autorizado", false));
+
+        return res.status(200).json(message("Eliminado", true));
     } catch(e) {
         debug(e)
         return res.status(500).json(message("Error interno", false))

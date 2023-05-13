@@ -9,6 +9,8 @@ const postController = require('../../controllers/post.controller')
 const runValidations = require('../../validators/index.validator')
 const postValidations = require('../../validators/post.validator')
 
+const {authentication} = require('../../middlewares/auth.middleware')
+
 router.get('/getAll',
     postController.getAll
 );
@@ -18,6 +20,7 @@ router.get('/searchByTitleOrDescription/:search',
     postController.searchByTitleOrDescription
 );
 router.post('/publish',
+    authentication,
     upload.array("photos"),
     postValidations.publish,
     runValidations,
@@ -26,12 +29,14 @@ router.post('/publish',
     postController.uploadPhotos
 );
 router.delete('/delete',
+    authentication,
     postValidations.delete,
     runValidations,
     postController.delete
 );
 
 router.post('/report',
+    authentication,
     postValidations.report,
     runValidations,
     postController.report
