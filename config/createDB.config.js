@@ -18,7 +18,7 @@ const Message = require('../models/Message.model');
     // relacion usuario a wallet 1 a 1
     Wallet.belongsTo(User, {
         foreignKey: {
-            name: 'wallet_id',
+            name: 'user_id',
             allowNull: false
         }
     })

@@ -47,13 +47,15 @@ middlewares.authentication = async (req, res, next) => {
  */
 middlewares.authorization = (role=roles.ADMIN) => {
     return (req, res, next) => {
+        console.log(role);
         try{
             const {roles = ""} = res.user; 
-            const roleIndex = roles.findIndex(_role => (_role == role || role == roles.ADMIN));
-            if (roleIndex < 0)
+            
+            if (roles != role)
                 return res.status(403).json(message('Permisos insuficientes', false));
             next();
         } catch(e) {
+            debug(e)
             return res.status(500).json(message('Error interno', false));
         }
     }
