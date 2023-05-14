@@ -3,6 +3,8 @@ const UserValidations = require('../../validators/user.validator');
 const runValidations = require('../../validators/index.validator');
 var router = express.Router();
 const userController = require('../../controllers/user.controller')
+const {authentication,authorization} = require('../../middlewares/auth.middleware')
+
 /* GET users listing. */
 router.get('/', userController.getUser)
 
@@ -30,8 +32,10 @@ UserValidations.signup,
     runValidations,
    userController.changepassword
  )
- router.put('/bannedusers',
-   userController.bannedusers
+ router.put('/banusers',
+ authentication,
+//  authorization,
+   userController.banusers
  )
  
  

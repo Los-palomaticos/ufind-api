@@ -122,7 +122,7 @@ userController.changepassword = async (req, res) => {
       res.status(500).json({ message: 'Ocurrió un error al actualizar la contraseña.' });
     }
 }   
-userController.bannedusers = async (req, res) => {
+userController.banusers = async (req, res) => {
     //SI EL USUARIO ES ADMIN PUEDE BANEAR, LOS DEMAS NO
     //al token hay que ponerle admin id
     try {
@@ -139,7 +139,7 @@ userController.bannedusers = async (req, res) => {
           }      
         });
        
-        res.json({ message: 'El usuario ha sido baneado.' });
+     return   res.status(200).json({ message: 'El usuario ha sido baneado.' });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Ocurrió un error al actualizar el usuario.' });
@@ -154,5 +154,5 @@ userController.getUserBanneds = async (req, res) => {
     });
     res.send(users);
 };
-//ruta wallet
+
 module.exports = userController;
