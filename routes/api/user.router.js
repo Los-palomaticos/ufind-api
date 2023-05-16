@@ -2,8 +2,12 @@ var express = require('express');
 var router = express.Router();
 const UserValidations = require('../../validators/user.validator');
 const runValidations = require('../../validators/index.validator');
+
+var router = express.Router();
 const userController = require('../../controllers/user.controller');
-const {authentication} = require('../../middlewares/auth.middleware');
+const { authentication, authorization } = require('../../middlewares/auth.middleware');
+
+const roles = require('../../data/role.data')
 
 /* GET users listing. */
 router.get('/', userController.getUser)
@@ -33,9 +37,11 @@ router.put('/editUser',
     runValidations,
    userController.changepassword
  )
- router.put('/bannedusers',
-   userController.bannedusers
- )
+router.put('/ban',
+  authentication,
+  authorization([roles.ADMIN, roles.SUPER]),
+  userController.ban
+)
  
  
 
