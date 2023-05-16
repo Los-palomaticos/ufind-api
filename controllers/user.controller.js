@@ -1,7 +1,7 @@
 const User = require('../models/User.model');
 const bcrypt = require('bcrypt');
-const {getToken, validateToken} = require('../utils/utils')
-
+const {getToken, validateToken, message} = require('../utils/utils')
+const roles = require('../data/role.data')
 const userController = {};
 
 /**
@@ -102,7 +102,7 @@ userController.editUser = async (req, res) => {
 userController.changepassword = async (req, res) => {
     try {
      
-      const {id} =req.body;
+      const {id} = req.body;
       const user = await User.findByPk(id);
       if (!user) {
         return res.status(404).json({ message: 'El usuario no existe.' });
@@ -125,24 +125,27 @@ userController.changepassword = async (req, res) => {
       res.status(500).json({ message: 'Ocurrió un error al actualizar la contraseña.' });
     }
 }   
-userController.bannedusers = async (req, res) => {
+userController.ban = async (req, res) => {
     //SI EL USUARIO ES ADMIN PUEDE BANEAR, LOS DEMAS NO
     //al token hay que ponerle admin id
     try {
-        
-        const {id} =req.body;
+        const {id} = req.body;
+        const req_id = res.user.id;
+        const req_role = res.user.role;
         const user = await User.findByPk(id);
-        if (!user) {
-          return res.status(404).json({ message: 'El usuario no existe.' });
-        }
+        if (id == req_id)
+          return res.status(401).json(message('No puede banearse a si mismo', false))
         
-          await User.update({banned:1}, {    
+        if (req_role != roles.SUPER && (user.role == roles.ADMIN || user.role == roles.SUPER))
+          return res.status(401).json(message('Un administrador no puede banear a un administrador', false))
+
+        await User.update({banned:1}, {    
           where: {
               id
-          }      
+          }
         });
        
-        res.json({ message: 'El usuario ha sido baneado.' });
+        res.status(200).json({ message: 'El usuario ha sido baneado.' });
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Ocurrió un error al actualizar el usuario.' });
