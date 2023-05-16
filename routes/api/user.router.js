@@ -1,11 +1,14 @@
 var express = require('express');
+var router = express.Router();
 const UserValidations = require('../../validators/user.validator');
 const runValidations = require('../../validators/index.validator');
+
 var router = express.Router();
 const userController = require('../../controllers/user.controller');
 const { authentication, authorization } = require('../../middlewares/auth.middleware');
 
 const roles = require('../../data/role.data')
+
 /* GET users listing. */
 router.get('/', userController.getUser)
 
@@ -22,11 +25,12 @@ UserValidations.signup,
  userController.signup
  )
 
- router.put('/edituser',
- UserValidations.edituser,
-    runValidations,
-   userController.edituser
- )
+router.put('/editUser',
+  authentication,
+  UserValidations.editUser,
+  runValidations,
+  userController.editUser
+)
 
  router.put('/changepassword',
  UserValidations.changepassword,

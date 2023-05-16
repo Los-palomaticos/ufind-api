@@ -126,7 +126,7 @@ postController.delete = async (req, res) => {
             }
         });
         if (!deleted)
-            return res.status(401).json(message("No autorizado", false));
+            return res.status(401).json(message("No se ha podido eliminar", false));
 
         return res.status(200).json(message("Eliminado", true));
     } catch(e) {

@@ -74,20 +74,23 @@ userController.signup = async (req, res) => {
     }
 };
 
-userController.edituser = async (req, res) => {
+userController.editUser = async (req, res) => {
     try {
      
-      const {id} = req.body;
-      const user = await User.findByPk(id);
-      if (!user) {
-        return res.status(404).json({ message: 'El usuario no existe.' });
-    
-      }
+      const {id} = res.user;
+      
+      //borrar campos que no se deben poder editar en este apartado
+      delete req.body['password']
+      delete req.body['birthday']
+      delete req.body['reported']
+      delete req.body['banned']
+      delete req.body['role']
+      delete req.body['token']
       
         await User.update({ ...req.body}, {    
         where: {
             id
-        }      
+        }
       });
      
       res.json({ message: 'El usuario ha sido actualizado.' });
