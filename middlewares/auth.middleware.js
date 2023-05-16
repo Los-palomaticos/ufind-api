@@ -1,5 +1,5 @@
 const User = require("../models/User.model");
-const roles = require('../data/role.data');
+const roles_list = require('../data/role.data');
 const debug = require('debug')('app:auth-middleware')
 const { message, validateToken } = require("../utils/utils");
 const tokenPrefix = "Bearer"
@@ -42,16 +42,15 @@ middlewares.authentication = async (req, res, next) => {
 /**
  * Autorizar segun rol de usuario
  * @function
- * @param {string | undefined} role 
+ * @param {[string] | undefined} role 
  * @returns {void}
  */
-middlewares.authorization = (role=roles.ADMIN) => {
+middlewares.authorization = (roles=[roles_list.ADMIN]) => {
     return (req, res, next) => {
-        console.log(role);
         try{
-            const {roles = ""} = res.user; 
-            
-            if (roles != role)
+            const {role = ""} = res.user;
+            const check = roles.findIndex(_role => role==_role)
+            if (check<0)
                 return res.status(403).json(message('Permisos insuficientes', false));
             next();
         } catch(e) {
