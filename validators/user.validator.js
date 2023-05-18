@@ -30,15 +30,56 @@ validations.signup = [
     .notEmpty().withMessage('Debe ingresar una Username')
 ];
 
-validations.edituser = [
-    body('id')
-    .notEmpty().withMessage('Debe ingresar una id'),
-    body('username').custom(username=> {
-        if (!username)
+validations.editUser = [
+    body('username').custom(val=> {
+        if (val === undefined)
             return true
+        else if (val === "")
+            return false
         return true
-    }).withMessage('El campo de usuario no puede ir vacio')
-    
+    }).withMessage('Debe ingresar un nombre de usuario'),
+    body('email').custom(val=> {
+        if (val === undefined)
+            return true
+        else if (val === "")
+            return false
+        return true
+    }).withMessage('Debe ingresar un email'),
+    body('location').custom(val=> {
+        if (val === undefined)
+            return true
+        else if (val === "")
+            return false
+        return true
+    }).withMessage('Debe ingresar una localizacion'),
+    body('email_backup').custom(val=> {
+        if (val === undefined)
+            return true
+        else if (val === "")
+            return false
+        return true
+    }).withMessage('Debe proveer un email de recuperacion'),
+    body('email_visibility').custom(val=> {
+        if (val === undefined)
+            return true
+        else if (val === "")
+            return false
+        return true
+    }).withMessage('Debe proveer informacion sobre la visibilidad'),
+    body('profile_visibility').custom(val=> {
+        if (val === undefined)
+            return true
+        else if (val === "")
+            return false
+        return true
+    }).withMessage('Debe proveer informacion sobre la visibilidad'),
+    body('institution').custom(val=> {
+        if (val === undefined)
+            return true
+        else if (val === "")
+            return false
+        return true
+    }).withMessage('Debe ingresar una institución')    
 ];
 validations.changepassword = [
     body('id')
