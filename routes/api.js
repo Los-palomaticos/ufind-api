@@ -7,6 +7,5 @@ const chatRouter = require('./api/chat.router')
 router.use('/user', userRouter)
 router.use('/post', postRouter)
 router.use('/wallet', walletRouter)
-router.use('/chat', chatRouter)
 
 module.exports = router;

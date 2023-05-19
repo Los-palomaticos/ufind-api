@@ -20,11 +20,11 @@ walletController.recharge = async (req, res) => {
         }      
       });
     
-      res.status(200).json({ message: 'Recarga realizada exitosamente' });
+      return res.status(200).json(message('Recarga realizada exitosamente', false));
     }
   catch (error) {
     debug(error)
-   return res.status(500).json({ message: 'Error al realizar la recarga' });
+    return res.status(500).json(message('Error al realizar la recarga', false));
     
   }
 };

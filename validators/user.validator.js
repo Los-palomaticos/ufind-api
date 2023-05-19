@@ -81,7 +81,7 @@ validations.editUser = [
         return true
     }).withMessage('Debe ingresar una institución')    
 ];
-validations.changepassword = [
+validations.changePassword = [
     body('id')
     .notEmpty().withMessage('Debe ingresar una id'),
 

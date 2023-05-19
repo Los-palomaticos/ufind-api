@@ -10,7 +10,7 @@ const { authentication, authorization } = require('../../middlewares/auth.middle
 const roles = require('../../data/role.data')
 
 /* GET users listing. */
-router.get('/', userController.getUser)
+
 
 router.get('/getUserBanneds', userController.getUserBanneds)
 
@@ -32,12 +32,18 @@ router.put('/editUser',
   userController.editUser
 )
 
- router.put('/changepassword',
- UserValidations.changepassword,
+ router.put('/changePassword',
+ UserValidations.changePassword,
     runValidations,
-   userController.changepassword
+   userController.changePassword
  )
 router.put('/ban',
+  authentication,
+  authorization([roles.ADMIN, roles.SUPER]),
+  userController.ban
+)
+
+router.put('/desban',
   authentication,
   authorization([roles.ADMIN, roles.SUPER]),
   userController.ban
