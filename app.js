@@ -21,7 +21,7 @@ require('./test')
 
 // crear tablas
 //corer una vez y luego comentar
-//require('./config/createDB.config')
+require('./config/createDB.config')
 
 app.use(logger('dev'));
 app.use(express.json());
