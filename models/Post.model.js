@@ -22,6 +22,9 @@ const Post = sequelize.define('Post', {
     location: {
         type: DataTypes.STRING,
     },
+    locationDescription: {
+        type: DataTypes.TEXT,
+    },
     complete: {
         type: DataTypes.TINYINT,
         allowNull: false,
