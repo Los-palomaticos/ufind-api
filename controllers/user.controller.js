@@ -136,7 +136,7 @@ userController.ban = async (req, res) => {
         if (id == req_id)
           return res.status(401).json(message('No puede banearse a si mismo', false))
         
-        if (req_role != roles.SUPER && (user.role == roles.ADMIN || user.role == roles.SUPER))
+        if (req_role != roles.SUPER && (user.role == roles.ADMIN || user.role == roles.SUPER))wallet
           return res.status(401).json(message('Un administrador no puede banear a un administrador', false))
 
         await User.update({banned:1}, {    
@@ -150,7 +150,9 @@ userController.ban = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Ocurrió un error al actualizar el usuario.' });
       }
-}    
+}  
+
+
 userController.getUserBanneds = async (req, res) => {
     const users = await User.findAll({
         where:{
