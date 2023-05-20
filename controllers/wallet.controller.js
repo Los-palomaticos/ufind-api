@@ -1,23 +1,25 @@
 const User = require('../models/Wallet.model');
-
+const {getToken, validateToken, message} = require('../utils/utils')
 const walletController = {};
 
 
-walletController.wallet = async (req, res) => {
-  const {id} =req.body;
-  const montoRecarga = req.body.wallet;
+walletController.recharge = async (req, res) => {
+  const {id} = req.body;
+  const { ucoins } = req.body;
 
   try {
-    const user = await User.findByPk(id);
-    if (!user) {
-      res.status(404).json({ message: 'Usuario no encontrado' });
-    } else {
-      user.walletBalance += montoRecarga;
-      await user.save();
-      res.status(200).json({ message: 'Recarga realizada exitosamente' });
-    }
+    
+    const updatedUser = await User.increment('ucoins', {
+    
+      where: {
+        user_id:res.user.id
+    }, 
+       by: ucoins });
+
+    return res.status(200).json({ message: 'Monedas añadidas correctamente' });
   } catch (error) {
-    res.status(500).json({ message: 'Error al realizar la recarga' });
+    console.error(error);
+    return res.status(500).json({ message: 'Error al añadir las monedas' });
   }
 };
 
