@@ -1,4 +1,4 @@
-const User = require('../models/Wallet.model');
+const Wallet = require('../models/Wallet.model');
 const {message} = require('../utils/utils')
 
 const walletController = {};
@@ -11,7 +11,7 @@ walletController.recharge = async (req, res) => {
 
   try {
     
-    const updatedUser = await User.increment('ucoins', {
+    const updatedWallet = await Wallet.increment('ucoins', {
     
       where: {
         user_id:res.user.id
