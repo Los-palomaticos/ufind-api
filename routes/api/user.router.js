@@ -48,7 +48,7 @@ router.put('/desban',
   authorization([roles.ADMIN, roles.SUPER]),
   userController.ban
 )
- 
+
  
 
 module.exports = router;

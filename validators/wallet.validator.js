@@ -7,6 +7,5 @@ validations.recharge = [
     .notEmpty().withMessage('Debe ingresar una id'),
     body('ucoins')
     .notEmpty().withMessage('Debe ingresar unas ucoins')
-
 ];
 module.exports = validations;
