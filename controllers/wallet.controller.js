@@ -1,9 +1,11 @@
 const User = require('../models/Wallet.model');
-const {getToken, validateToken, message} = require('../utils/utils')
+const {message} = require('../utils/utils')
+
 const walletController = {};
 
 
 walletController.recharge = async (req, res) => {
+
   const {id} = req.body;
   const { ucoins } = req.body;
 
