@@ -105,7 +105,7 @@ userController.changePassword = async (req, res) => {
 };
 
 userController.ban = async (req, res) => {
-  try {
+   try {
     const { id } = req.body;
     const req_id = res.user.id;
     const req_role = res.user.role;
@@ -130,7 +130,6 @@ userController.ban = async (req, res) => {
     return res.status(500).json(message('Ocurrio un error al banear usuario', false));
   }
 };
-
 
 userController.desban = async (req, res) => {
   try {

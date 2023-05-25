@@ -1,31 +1,27 @@
-
-const Wallet = require('../models/Wallet.model');
+const User = require('../models/Wallet.model');
+const {message} = require('../utils/utils')
 
 const walletController = {};
 
 
 walletController.recharge = async (req, res) => {
-  const debug = require('debug')('app:wallet-controller')
 
+  const {id} = req.body;
+  const { ucoins } = req.body;
 
   try {
     
-      console.log(res.user)
-      const {ucoins} = req.body ;
-      
-      
-      await Wallet.update({ ucoins:ucoins}, {    
-        where: {
-            wallet_id:res.user.id
-        }      
-      });
+    const updatedUser = await User.increment('ucoins', {
     
-      return res.status(200).json(message('Recarga realizada exitosamente', false));
-    }
-  catch (error) {
-    debug(error)
-    return res.status(500).json(message('Error al realizar la recarga', false));
-    
+      where: {
+        user_id:res.user.id
+    }, 
+       by: ucoins });
+
+    return res.status(200).json({ message: 'Monedas añadidas correctamente' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error al añadir las monedas' });
   }
 };
 
