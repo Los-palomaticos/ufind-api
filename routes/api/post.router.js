@@ -15,9 +15,14 @@ router.get('/getAll',
     postController.getAll
 );
 router.get('/searchByTitleOrDescription/:search',
-    postValidations.searchByTitleOrDescription,
+    postValidations.search,
     runValidations,
     postController.searchByTitleOrDescription
+);
+router.get('/searchByLocation/:search',
+    postValidations.search,
+    runValidations,
+    postController.searchByLocation
 );
 router.post('/publish',
     authentication,

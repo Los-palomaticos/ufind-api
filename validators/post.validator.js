@@ -28,7 +28,7 @@ validations.report = [
     body("id")
     .notEmpty().withMessage("Debe proveer la publicacion a eliminar")
 ]
-validations.searchByTitleOrDescription = [
+validations.search = [
     param("search")
     .notEmpty().withMessage("Debe proveer un parametro de busqueda")
 ]

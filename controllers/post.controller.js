@@ -19,7 +19,11 @@ postController.getAll = async (req, res) => {
         })
     
         // mapear lista de fotos
-        let _posts = posts.map(post => {
+        console.log(posts)
+        if (!posts)
+            return res.status(404).json(message('No hay publicaciones', true))
+        
+            let _posts = posts.map(post => {
             let photos = post.photos.map(photo => {
                 return photo.photo
             })
@@ -71,16 +75,49 @@ postController.searchByTitleOrDescription = async (req, res) => {
         res.status(500).json(message('Error interno', false))
     }
 }
+postController.searchByLocation = async (req, res) => {
+    try {
+        let {search} = req.params
+        let posts = await Post.findAll({
+            include: [
+                {
+                    model: User.scope('publisher'),
+                    as: "publisher"
+                },
+                "photos"
+            ],
+            where: {
+                locationDescription: {
+                    [Op.like]: `%${search}%`
+                }
+            }
+        })
+    
+        // mapear lista de fotos
+        let _posts = posts.map(post => {
+            let photos = post.photos.map(photo => {
+                return photo.photo
+            })
+            return {...post.dataValues, photos}
+        })
+        res.status(200).json(_posts)
+    } catch(e) {
+        debug(e)
+        res.status(500).json(message('Error interno', false))
+    }
+}
+
 postController.publish = async (req, res, next) => {
     let {user} = res;
-    let {title, description, location} = req.body
+    let {title, description, location, locationDescription} = req.body
     try {
         // Guardar post en la base de datos
         const post = await Post.create({
             user_id: user.id,
             title,
             description,
-            location
+            location,
+            locationDescription
         })
         // enviamos el id del post al siguiente middleware
         res.post_id = post.dataValues.id
