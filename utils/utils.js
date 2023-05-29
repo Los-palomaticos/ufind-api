@@ -50,4 +50,17 @@ const validateToken = (token) => {
     }
     return payload;
 }
-module.exports = {message, getToken, validateToken}
+/**
+ * Recibe una lista de posts y devuelve los posts con el campo photos como un arreglo de cadenas de texto
+ * @param {[]} posts 
+ * @returns {[]}
+ */
+const mapPosts = (posts) => {
+    return posts.map(post => {
+        let photos = post.photos.map(photo => {
+            return photo.photo
+        })
+        return {...post.dataValues, photos}
+    })
+}
+module.exports = {message, getToken, validateToken, mapPosts}
