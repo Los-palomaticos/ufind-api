@@ -20,13 +20,13 @@ postController.getAll = async (req, res) => {
 
         // mapear lista de fotos
         if (!posts)
-            return res.status(404).json(message('No hay publicaciones', true))
+            return res.status(404).json(message(['No hay publicaciones'], true))
         
         let _posts = mapPosts(posts)
         res.status(200).json(_posts)
     } catch(e) {
         debug(e)
-        res.status(500).json(message('Error interno', false))
+        res.status(500).json(message(['Error interno'], false))
     }
 }
 postController.searchByTitleOrDescription = async (req, res) => {
@@ -55,13 +55,12 @@ postController.searchByTitleOrDescription = async (req, res) => {
                 ]
             }
         })
-    
         // mapear lista de fotos
         let _posts = mapPosts(posts)
         res.status(200).json(_posts)
     } catch(e) {
         debug(e)
-        res.status(500).json(message('Error interno', false))
+        res.status(500).json(message(['Error interno'], false))
     }
 }
 postController.searchByLocation = async (req, res) => {
@@ -87,7 +86,7 @@ postController.searchByLocation = async (req, res) => {
         res.status(200).json(_posts)
     } catch(e) {
         debug(e)
-        res.status(500).json(message('Error interno', false))
+        res.status(500).json(message(['Error interno'], false))
     }
 }
 postController.getReported = async (req, res) => {
@@ -109,7 +108,7 @@ postController.getReported = async (req, res) => {
         return res.status(200).json(posts)
     } catch(e) {
         debug(e)
-        return res.status(500).json(message('Error interno', false))
+        return res.status(500).json(message(['Error interno'], false))
     }
 }
 
@@ -132,7 +131,7 @@ postController.publish = async (req, res, next) => {
         next()
     } catch(e) {
         debug(e)
-        return res.status(500).json(message("Error interno", false))
+        return res.status(500).json(message(["Error interno"], false))
     }
 }
 postController.uploadPhotos = async (req, res) => {
@@ -145,11 +144,11 @@ postController.uploadPhotos = async (req, res) => {
             }
         })
         await Photo.bulkCreate(records)
-        return res.status(200).json(message("Post subido", true))
+        return res.status(200).json(message(["Post subido"], true))
 
     } catch(e) {
         debug(e)
-        return res.status(500).json(message("Error interno", false))
+        return res.status(500).json(message(["Error interno"], false))
     }
 }
 
@@ -170,12 +169,12 @@ postController.delete = async (req, res) => {
             }
         });
         if (!deleted)
-            return res.status(401).json(message("No se ha podido eliminar", false));
+            return res.status(401).json(message(["No se ha podido eliminar"], false));
 
-        return res.status(200).json(message("Eliminado", true));
+        return res.status(200).json(message(["Eliminado"], true));
     } catch(e) {
         debug(e)
-        return res.status(500).json(message("Error interno", false))
+        return res.status(500).json(message(["Error interno"], false))
     }
 }
 
@@ -188,10 +187,10 @@ postController.report = async (req, res) => {
                 id
             }
         })
-        return res.status(200).json(message("Post reportado", true))
+        return res.status(200).json(message(["Post reportado"], true))
     } catch(e) {
         debug(e)
-        return res.status(500).json(message("Error interno", false))
+        return res.status(500).json(message(["Error interno"], false))
     }
 }
 
@@ -203,10 +202,10 @@ postController.resetReports = async (req, res) => {
         },{
             where: {id}
         })
-        return res.status(200).json(message("Reportes reiniciados", true))
+        return res.status(200).json(message(["Reportes reiniciados"], true))
     } catch(e) {
         debug(e)
-        return res.status(500).json(message("Error interno", false))
+        return res.status(500).json(message(["Error interno"], false))
     }
 }
 module.exports = postController
