@@ -20,7 +20,7 @@ userController.login = async (req, res) => {
       const token = getToken(user);
       user.token = token;
       await user.save();
-      return res.status(200).json({ token });
+      return res.status(200).json(message([token], false));
     } else {
       return res.status(401).json(message(['Credenciales erroneas'], false));
     }
