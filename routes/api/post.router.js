@@ -11,10 +11,20 @@ const postValidations = require('../../validators/post.validator')
 
 const {authentication, authorization} = require('../../middlewares/auth.middleware')
 const roles = require('../../data/role.data')
+
+/**
+ * ruta getAll
+ * necesita:
+ */
 router.get('/getAll',
     postController.getAll
 );
 
+/**
+ * ruta getReported
+ * nesecita:
+ *  - header con token
+ */
 router.get('/getReported',
     authentication,
     authorization([roles.ADMIN, roles.SUPER]),
@@ -23,16 +33,37 @@ router.get('/getReported',
     postController.getReported
 );
 
+/**
+ * ruta searchByTitleOrDescription:
+ * necesita:
+ *  - parametro search
+ */
 router.get('/searchByTitleOrDescription/:search',
     postValidations.search,
     runValidations,
     postController.searchByTitleOrDescription
 );
+
+/**
+ * ruta searchByLocation:
+ * necesita:
+ *  - parametro search
+ */
 router.get('/searchByLocation/:search',
     postValidations.search,
     runValidations,
     postController.searchByLocation
 );
+
+/**
+ * ruta publish:
+ * necesita:
+ *  - header con token
+ *  - photos
+ *  - title
+ *  - description
+ *  - location (opcional)
+ */
 router.post('/publish',
     authentication,
     upload.array("photos"),
@@ -42,6 +73,13 @@ router.post('/publish',
     uploadPhoto,
     postController.uploadPhotos
 );
+
+/**
+ * ruta delete:
+ * necesita:
+ *  - header con token
+ *  - id post a borrar
+ */
 router.delete('/delete',
     authentication,
     postValidations.delete,
@@ -49,6 +87,12 @@ router.delete('/delete',
     postController.delete
 );
 
+/**
+ * ruta report:
+ * necesita:
+ *  - header con token
+ *  - id post a reportar
+ */
 router.post('/report',
     authentication,
     postValidations.report,
@@ -56,6 +100,12 @@ router.post('/report',
     postController.report
 )
 
+/**
+ * ruta resetReports:
+ * necesita:
+ *  - header con token
+ *  - id post a limpiar de reportes
+ */
 router.post('/resetReports',
     authentication,
     authorization([roles.ADMIN, roles.SUPER]),

@@ -9,22 +9,50 @@ const { authentication, authorization } = require('../../middlewares/auth.middle
 
 const roles = require('../../data/role.data')
 
-/* GET users listing. */
+/**
+ * ruta getBannedUsers
+ * necesita:
+ *  - header con token
+ */
+router.get('/getBannedUsers', userController.getBannedUsers)
 
-
-router.get('/getUserBanneds', userController.getUserBanneds)
-
+/**
+ * ruta login
+ * necesita:
+ *  - email
+ *  - password
+ */
 router.post('/login', 
-UserValidations.login,
-runValidations,
-userController.login)
+  UserValidations.login,
+  runValidations,
+  userController.login
+)
 
+/**
+ * ruta signup
+ * necesita:
+ *  - email
+ *  - username
+ *  - password
+ */
 router.post('/signup',
-UserValidations.signup,
- runValidations,
- userController.signup
- )
+  UserValidations.signup,
+  runValidations,
+  userController.signup
+)
 
+/**
+ * ruta editUser
+ * necesita:
+ *  - username
+ *  - email
+ *  - location
+ *  - email_backup
+ *  - email_visibility
+ *  - profile_visibility
+ *  - institution  
+ * TODOS OPCIONALES
+ */
 router.put('/editUser',
   authentication,
   UserValidations.editUser,
@@ -32,23 +60,38 @@ router.put('/editUser',
   userController.editUser
 )
 
- router.put('/changePassword',
- UserValidations.changePassword,
-    runValidations,
-   userController.changePassword
- )
+/**
+ * ruta change password
+ * necesita:
+ *  - header con token
+ *  - password
+ */
+router.put('/changePassword',
+  authentication,
+  UserValidations.changePassword,
+  runValidations,
+  userController.changePassword
+)
+
+/**
+ * ruta ban
+ * necesita:
+ *  - id del usuario a banear
+ */
 router.put('/ban',
   authentication,
   authorization([roles.ADMIN, roles.SUPER]),
   userController.ban
 )
 
+/**
+ * ruta desban
+ * necesita:
+ *  - id del usuario a desbanear
+ */
 router.put('/desban',
   authentication,
   authorization([roles.ADMIN, roles.SUPER]),
   userController.ban
 )
-
- 
-
 module.exports = router;

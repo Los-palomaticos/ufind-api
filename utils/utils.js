@@ -1,17 +1,28 @@
 const jwt = require('jsonwebtoken');
 /**
  * @function
- * Genera un json con mensaje y estado, util para enviar una respuesta al cliente
- * @param {string[]} message 
- * @param {boolean} state
+ * Genera un json con un mensaje y un estado de respuesta satisfactorio
+ * @param {any} message 
+ * @returns {{message: any, ok: boolean}}
+ */
+const success = (message) => {
+    return {
+        message,
+        ok: true
+    }
+}
+/**
+ * @function
+ * Genera un json con una lista de mensajes y un estado de respuesta fallido
+ * @param {string[]} messages
  * @returns {{message: string, ok: boolean}}
  */
-const message = (messages, state) => {
-    if (typeof message != typeof [])
-        messages = Array(messages)
+const failure = (messages) => {
+    if (typeof messages != typeof [])
+        messages = Array(messages) 
     return {
-        messages: messages,
-        ok: state
+        messages,
+        ok: false
     }
 }
 
@@ -65,4 +76,4 @@ const mapPosts = (posts) => {
         return {...post.dataValues, photos}
     })
 }
-module.exports = {message, getToken, validateToken, mapPosts}
+module.exports = {success, failure, getToken, validateToken, mapPosts}

@@ -4,12 +4,18 @@ const { authentication } = require('../../middlewares/auth.middleware');
 
 var router = express.Router();
 const walletController = require('../../controllers/wallet.controller')
-const WalletValidations = require('../../validators/wallet.validator');
+const walletValidations = require('../../validators/wallet.validator');
 const runValidations = require('../../validators/index.validator');
 
+/**
+ * ruta recharge
+ * necesita:
+ *  - header con token
+ *  - ucoins
+ */
 router.post('/recharge',
   authentication,
-  WalletValidations.recharge,
+  walletValidations.recharge,
   runValidations,
   walletController.recharge
 )
