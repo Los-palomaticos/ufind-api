@@ -5,13 +5,17 @@ const roles = require('../data/role.data');
 
 const userController = {};
 
+userController.validateToken = (req, res) => {
+  return res.status(200).json(success("Sesión vigente"))
+}
+
 userController.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.scope('withPassword').findOne({ where: { email: email } });
 
     if (!user) {
-      return res.status(401).json(failure(["Credenciales erroneas"]));
+      return res.status(401).json(failure(["Credenciales erróneas"]));
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -22,11 +26,11 @@ userController.login = async (req, res) => {
       await user.save();
       return res.status(200).json(success(token));
     } else {
-      return res.status(401).json(failure(['Credenciales erroneas']));
+      return res.status(401).json(failure(['Credenciales erróneas']));
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json(failure(['Ocurrio un error al inicar sesion']));
+    return res.status(500).json(failure(['Ocurrió un error al inicar sesión']));
   }
 };
 
@@ -49,7 +53,7 @@ userController.signup = async (req, res) => {
     res.status(200).json(success("Registro exitoso"));
   } catch (error) {
     console.error(error);
-    return res.status(500).json(failure(['Ocurrio un error al registrarse']));
+    return res.status(500).json(failure(['Ocurrió un error al registrarse']));
   }
 };
 
@@ -74,7 +78,7 @@ userController.editUser = async (req, res) => {
     return res.status(200).json(success('Usuario actualizado'));
   } catch (error) {
     console.error(error);
-    return res.status(500).json(failure(['Ocurrio un error al actualizar usuario']));
+    return res.status(500).json(failure(['Ocurrió un error al actualizar usuario']));
   }
 };
 
@@ -92,7 +96,7 @@ userController.changePassword = async (req, res) => {
     return res.status(200).json(success('La contraseña ha sido actualizada'));
   } catch (error) {
     console.error(error);
-    return res.status(500).json(failure(['Ocurrio un error al actualizar la contraseña']));
+    return res.status(500).json(failure(['Ocurrió un error al actualizar la contraseña']));
   }
 };
 
@@ -119,7 +123,7 @@ userController.ban = async (req, res) => {
     return res.status(200).json(success('Usuario baneado'));
   } catch (error) {
     console.error(error);
-    return res.status(500).json(failure(['Ocurrio un error al banear usuario']));
+    return res.status(500).json(failure(['Ocurrió un error al banear usuario']));
   }
 };
 
@@ -146,7 +150,7 @@ userController.desban = async (req, res) => {
     return res.status(200).json(success('Usuario desbaneado'));
   } catch (error) {
     console.error(error);
-    return res.status(500).json(failure(['Ocurrio un error al desbanear usuario']));
+    return res.status(500).json(failure(['Ocurrió un error al desbanear usuario']));
   }
 };
 
