@@ -8,6 +8,13 @@ const userController = require('../../controllers/user.controller');
 const { authentication, authorization } = require('../../middlewares/auth.middleware');
 
 const roles = require('../../data/role.data')
+/**
+ * 
+ */
+router.get('/validateToken',
+  authentication,
+  userController.validateToken
+)
 
 /**
  * ruta getBannedUsers

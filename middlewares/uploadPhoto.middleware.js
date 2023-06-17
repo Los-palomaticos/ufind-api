@@ -1,7 +1,7 @@
 const cloudinary = require('cloudinary').v2
 const fs = require('fs')
 const debug = require('debug')('app:subir-foto-middleware');
-const {message} = require('../utils/utils');
+const {failure} = require('../utils/utils');
 const path = require('path');
 const removePhoto = (path) => {
     let response = true;
@@ -28,18 +28,18 @@ const uploadPhoto = async (req, res, next) => {
         paths.forEach(path => {
             if (!removePhoto(path)) {
                 debug("Error al borrar imagen en los archivos internos")
-                return res.status(500).send(message("Error interno", false))
+                return res.status(500).send(failure("Error interno"))
             }
         })
 
         if (URIs.length == 0) {
             debug("Error al subir imagen/es")
-            return res.status(500).send(message("Error interno", false))
+            return res.status(500).send(failure("Error interno"))
         }
         res.URIs = URIs
     } catch(e) {
         debug('Error con cloudinary')
-        return res.status(500).send(message("Error interno", false))
+        return res.status(500).send(failure("Error interno"))
     }
     next()
 }
