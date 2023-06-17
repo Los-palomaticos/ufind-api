@@ -21,7 +21,7 @@ const failure = (messages) => {
     if (typeof messages != typeof [])
         messages = Array(messages) 
     return {
-        messages,
+	errors:messages,
         ok: false
     }
 }
