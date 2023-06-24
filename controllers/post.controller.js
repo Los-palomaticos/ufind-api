@@ -56,7 +56,10 @@ postController.searchByTitleOrDescription = async (req, res) => {
                         }
                     }
                 ]
-            }
+            },
+            order: [
+                ['id', 'DESC']
+            ]
         })
         // mapear lista de fotos
         let _posts = mapPosts(posts)
@@ -81,7 +84,10 @@ postController.searchByLocation = async (req, res) => {
                 locationDescription: {
                     [Op.like]: `%${search}%`
                 }
-            }
+            },
+            order: [
+                ['id', 'DESC']
+            ]
         })
     
         // mapear lista de fotos
