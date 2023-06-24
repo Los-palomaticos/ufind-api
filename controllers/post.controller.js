@@ -16,6 +16,9 @@ postController.getAll = async (req, res) => {
                 },
                 "photos"
             ],
+            order: [
+                ['id', 'DESC']
+            ]
         })
 
         // mapear lista de fotos
