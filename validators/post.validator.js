@@ -32,4 +32,8 @@ validations.search = [
     param("search")
     .notEmpty().withMessage("Debe proveer un parametro de busqueda")
 ]
+validations.savePost = [
+    body("id")
+    .notEmpty().withMessage("Debe proveer el id de la publicación a guardar")
+]
 module.exports = validations;

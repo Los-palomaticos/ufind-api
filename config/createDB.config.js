@@ -46,7 +46,7 @@ const Message = require('../models/Message.model');
             name: 'user_id',
             allowNull: false
         },
-        as: "saver"
+        as: "user"
     });
 
     // Relacion entre photo y post 1 a n

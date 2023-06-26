@@ -114,4 +114,30 @@ router.post('/resetReports',
     postController.resetReports
 )
 
+/**
+ * ruta savePost
+ * necesita:
+ *  - header con token
+ *  - id del post a guardar
+ */
+router.post('/savePost',
+    authentication, 
+    postValidations.savePost,
+    runValidations,
+    postController.savePost
+)
+
+/**
+ * ruta deleteSavedPost
+ * necesita:
+ *  - header con token
+ *  - id del post a guardar
+ */
+router.post('/deleteSavedPost',
+    authentication, 
+    postValidations.savePost,
+    runValidations,
+    postController.deleteSavedPost
+)
+
 module.exports = router
