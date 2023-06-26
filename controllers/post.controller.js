@@ -3,6 +3,8 @@ const {success, failure, mapPosts} = require('../utils/utils');
 const Post = require('../models/Post.model');
 const Photo = require('../models/Photo.model');
 const User = require('../models/User.model');
+const SavedPost = require('../models/SavedPost.model')
+
 const { Op } = require('sequelize');
 const debug = require('debug')("app:post-controller");
 const roles = require('../data/role.data');
@@ -215,6 +217,39 @@ postController.resetReports = async (req, res) => {
     } catch(e) {
         debug(e)
         return res.status(500).json(failure(["Error interno"]))
+    }
+}
+
+postController.savePost = async (req, res) => {
+    try {
+        let post_id = req.body.id
+        let user_id = res.user.id
+        await SavedPost.create({
+            post_id,
+            user_id
+        })
+        return res.status(200).json(success("Post guardado"))
+    } catch(e) {
+        debug(e)
+        return res.status(500).json(failure("No se ha podido guardar el post"))
+    }
+}
+postController.deleteSavedPost = async(req, res) => {
+    try {
+        let post_id = req.body.id
+        let user_id = res.user.id
+        await SavedPost.destroy({
+            where:{
+                [Op.and]: [
+                    {post_id},
+                    {user_id}
+                ]
+            }
+        })
+        return res.status(200).json(success("Post eliminado de la lista de guardados"))
+    } catch (e) {
+        debug(e)
+        return res.status(500).json(failure("No se ha podido eliminar el post de la lista de guardados"))
     }
 }
 module.exports = postController
