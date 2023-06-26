@@ -10,6 +10,7 @@ const debug = require('debug')("app:post-controller");
 const roles = require('../data/role.data');
 postController.getAll = async (req, res) => {
     try {
+        let {limit = 10, offset = 0} = req.query
         let posts = await Post.findAll({
             include: [
                 {
@@ -20,7 +21,9 @@ postController.getAll = async (req, res) => {
             ],
             order: [
                 ['id', 'DESC']
-            ]
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset)
         })
 
         // mapear lista de fotos
