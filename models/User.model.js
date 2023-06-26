@@ -83,7 +83,7 @@ const User = sequelize.define('User', {
     },
     scopes:{
         publisher: {
-            attributes: ['username', 'id', 'reported', 'banned']
+            attributes: ['username', 'id', 'reported', 'banned', 'email']
         },
         withPassword: {
             exclude: ['createdAt', 'updatedAt']
