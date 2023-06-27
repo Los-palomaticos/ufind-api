@@ -38,6 +38,16 @@ router.get('/getReported',
  * nesecita:
  *  - header con token
  */
+router.get('/getUserPosts',
+    authentication,
+    postController.getUserPosts
+);
+
+/**
+ * ruta getSavedPosts
+ * nesecita:
+ *  - header con token
+ */
 router.get('/getSavedPosts',
     authentication,
     postController.getSavedPosts
