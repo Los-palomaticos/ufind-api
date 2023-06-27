@@ -37,6 +37,40 @@ postController.getAll = async (req, res) => {
         res.status(500).json(failure(['Error interno']))
     }
 }
+postController.getSavedPosts = async (req, res) => {
+    try {
+        let user_id = res.user.id
+        let {limit = 1, offset = 0} = req.query
+        let posts = await User.findByPk(user_id,
+        {
+            include:[{
+                model: Post,
+                required: false,
+                as: "savedPosts",
+                through:{
+                    attributes:[]
+                },
+                include:[{
+                    model: User.scope("publisher"),
+                    as: "publisher"
+                }, {
+                    model: Photo.scope("noId"),
+                    as: "photos"
+                }],
+            }],
+            attributes:[],
+        })
+        // mapear lista de fotos
+        if (!posts)
+            return res.status(404).json(failure(['No hay publicaciones']))
+        
+        let _posts = mapPosts(posts.savedPosts)
+        return res.status(200).json(_posts)
+    } catch(e) {
+        debug(e)
+        res.status(500).json(failure(['Error interno']))
+    }
+}
 postController.searchByTitleOrDescription = async (req, res) => {
     try {
         let {search} = req.params
