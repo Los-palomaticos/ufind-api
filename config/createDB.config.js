@@ -38,7 +38,7 @@ const Message = require('../models/Message.model');
             name: 'post_id',
             allowNull: false
         },
-        as: "savedPost"
+        as: "postKeepers"
     });
     User.belongsToMany(Post, {
         through: SavedPost,
@@ -46,7 +46,7 @@ const Message = require('../models/Message.model');
             name: 'user_id',
             allowNull: false
         },
-        as: "user"
+        as: "savedPosts"
     });
 
     // Relacion entre photo y post 1 a n
@@ -89,5 +89,5 @@ const Message = require('../models/Message.model');
     //     location: "UCA"
     // })
 
-    console.log('Tables created')
+    console.log('Tables created!')
 })();

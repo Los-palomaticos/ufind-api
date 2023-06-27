@@ -34,6 +34,17 @@ router.get('/getReported',
 );
 
 /**
+ * ruta getSavedPosts
+ * nesecita:
+ *  - header con token
+ */
+router.get('/getSavedPosts',
+    authentication,
+    postController.getSavedPosts
+);
+
+
+/**
  * ruta searchByTitleOrDescription:
  * necesita:
  *  - parametro search
