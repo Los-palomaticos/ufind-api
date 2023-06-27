@@ -22,7 +22,7 @@ const uploadPhoto = async (req, res, next) => {
             files.map(async file => {
                 paths.push(file.path)
                 let uploadedPhoto = await cloudinary.uploader.upload(`${file.path}`)
-                return uploadedPhoto.url
+                return uploadedPhoto.secure_url
             })
         )
         paths.forEach(path => {
