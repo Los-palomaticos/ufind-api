@@ -56,7 +56,14 @@ userController.signup = async (req, res) => {
     return res.status(500).json(failure(['Ocurrió un error al registrarse']));
   }
 };
-
+userController.getUser = async (req, res) => {
+  try {
+    return res.status(200).json(success(res.user))
+  } catch(e) {
+    debug(e)
+    return res.status(500).json(failure("Error interno"))
+  }
+}
 userController.editUser = async (req, res) => {
   try {
     const { id } = res.user;
