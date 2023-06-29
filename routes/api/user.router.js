@@ -101,4 +101,15 @@ router.put('/desban',
   authorization([roles.ADMIN, roles.SUPER]),
   userController.ban
 )
+
+/**
+ * ruta getUser
+ * necesita:
+ *  - header con token
+ */
+router.get('/getUser',
+  authentication,
+  userController.getUser
+)
+
 module.exports = router;
