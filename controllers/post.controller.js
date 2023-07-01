@@ -25,13 +25,14 @@ postController.getAll = async (req, res) => {
             limit: parseInt(limit),
             offset: parseInt(offset)
         })
-
+        next = (posts.length > 0 && posts.length == limit) ? parseInt(offset)+parseInt(limit) : null
+        previous = parseInt(offset)- parseInt(limit) < 0 ? 0 : parseInt(offset-limit)
         // mapear lista de fotos
         if (!posts)
             return res.status(404).json(failure(['No hay publicaciones']))
         
         let _posts = mapPosts(posts)
-        res.status(200).json(success(_posts))
+        res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
         res.status(500).json(failure(['Error interno']))
@@ -97,7 +98,7 @@ postController.getSavedPosts = async (req, res) => {
             return res.status(404).json(failure(['No hay publicaciones']))
         
         let _posts = mapPosts(posts.savedPosts)
-        return res.status(200).json(_posts)
+        return res.status(200).json(success(_posts))
     } catch(e) {
         debug(e)
         res.status(500).json(failure(['Error interno']))
