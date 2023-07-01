@@ -30,7 +30,7 @@ const User = sequelize.define('User', {
     photo: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "user.png",
+        defaultValue: "https://res.cloudinary.com/dvbuu8u2x/image/upload/v1688187666/user_gpigol.png",
         validate: {
             isUrl: true
         }
