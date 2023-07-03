@@ -15,8 +15,10 @@ const roles = require('../../data/role.data')
 /**
  * ruta getAll
  * necesita:
+ *  - header con token
  */
 router.get('/getAll',
+    authentication,
     postController.getAll
 );
 

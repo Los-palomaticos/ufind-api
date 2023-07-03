@@ -38,7 +38,7 @@ const Message = require('../models/Message.model');
             name: 'post_id',
             allowNull: false
         },
-        as: "postKeepers"
+        as: "postKeeper"
     });
     User.belongsToMany(Post, {
         through: SavedPost,
