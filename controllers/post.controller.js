@@ -83,21 +83,26 @@ postController.getSavedPosts = async (req, res) => {
                 through:{
                     attributes:[]
                 },
-                include:[{
-                    model: User.scope("publisher"),
-                    as: "publisher"
-                }, {
-                    model: Photo.scope("noId"),
-                    as: "photos"
-                }],
+                attributes: ["id"]
+                // include:[{
+                //     model: User.scope("publisher"),
+                //     as: "publisher"
+                // }, {
+                //     model: Photo.scope("noId"),
+                //     as: "photos"
+                // }],
             }],
             attributes:[],
         })
-        // mapear lista de fotos
         if (!posts)
             return res.status(404).json(failure(['No hay publicaciones']))
         
-        let _posts = mapPosts(posts.savedPosts)
+        // mapear posts para obtener sus id
+        let _posts = posts.savedPosts.map((post) => {
+            return post.id
+        })
+        // mapear lista de fotos
+        // let _posts = mapPosts(posts.savedPosts)
         return res.status(200).json(success(_posts))
     } catch(e) {
         debug(e)
