@@ -10,6 +10,7 @@ const debug = require('debug')("app:post-controller");
 const roles = require('../data/role.data');
 postController.getAll = async (req, res) => {
     try {
+        let user_id = res.user.id
         let {limit = 10, offset = 0} = req.query
         let posts = await Post.findAll({
             include: [
@@ -17,7 +18,19 @@ postController.getAll = async (req, res) => {
                     model: User.scope('publisher'),
                     as: "publisher"
                 },
-                "photos"
+                "photos",
+                {
+                    model: User,
+                    required: false,
+                    as: "postKeeper",
+                    through: {
+                        attributes:[]
+                    },
+                    attributes: ["id"],
+                    where: {
+                        id: user_id
+                    }
+                }
             ],
             order: [
                 ['id', 'DESC']
@@ -28,10 +41,15 @@ postController.getAll = async (req, res) => {
         next = (posts.length > 0 && posts.length == limit) ? parseInt(offset)+parseInt(limit) : null
         previous = parseInt(offset)- parseInt(limit) < 0 ? 0 : parseInt(offset-limit)
         // mapear lista de fotos
-        if (!posts)
+        if (!posts) {
             return res.status(404).json(failure(['No hay publicaciones']))
+        }
         
         let _posts = mapPosts(posts)
+        _posts = _posts.map((post)=> {
+            post.postKeeper = post.postKeeper.length > 0 ? true : false
+            return post
+        })
         res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
