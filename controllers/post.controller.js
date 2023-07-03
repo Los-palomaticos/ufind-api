@@ -294,9 +294,11 @@ postController.savePost = async (req, res) => {
     try {
         let post_id = req.body.id
         let user_id = res.user.id
-        await SavedPost.create({
-            post_id,
-            user_id
+        await SavedPost.findOrCreate({
+            where: {
+                post_id,
+                user_id
+            }
         })
         return res.status(200).json(success("Post guardado"))
     } catch(e) {
