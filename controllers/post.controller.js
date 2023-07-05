@@ -39,7 +39,7 @@ postController.getAll = async (req, res) => {
             offset: parseInt(offset)
         })
         next = (posts.length > 0 && posts.length == limit) ? parseInt(offset)+parseInt(limit) : null
-        previous = parseInt(offset)- parseInt(limit) < 0 ? 0 : parseInt(offset-limit)
+        previous = offset == 0 ? null : parseInt(offset) - parseInt(limit)
         // mapear lista de fotos
         if (!posts) {
             return res.status(404).json(failure(['No hay publicaciones']))
