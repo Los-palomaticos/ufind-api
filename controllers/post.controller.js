@@ -91,37 +91,46 @@ postController.getUserPosts = async (req, res) => {
 postController.getSavedPosts = async (req, res) => {
     try {
         let user_id = res.user.id
-        let {limit = 1, offset = 0} = req.query
-        let posts = await User.findByPk(user_id,
-        {
-            include:[{
-                model: Post,
-                required: false,
-                as: "savedPosts",
-                through:{
-                    attributes:[]
+        let {limit = 10, offset = 0} = req.query
+        let posts = await Post.findAll({
+            include: [
+                {
+                    model: User.scope('publisher'),
+                    as: "publisher"
                 },
-                attributes: ["id"]
-                // include:[{
-                //     model: User.scope("publisher"),
-                //     as: "publisher"
-                // }, {
-                //     model: Photo.scope("noId"),
-                //     as: "photos"
-                // }],
-            }],
-            attributes:[],
+                "photos",
+                {
+                    model: User,
+                    required: true,
+                    as: "postKeeper",
+                    through: {
+                        attributes:[]
+                    },
+                    attributes: ["id"],
+                    where: {
+                        id: user_id
+                    }
+                }
+            ],
+            order: [
+                ['id', 'DESC']
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset)
         })
-        if (!posts)
-            return res.status(404).json(failure(['No hay publicaciones']))
-        
-        // mapear posts para obtener sus id
-        let _posts = posts.savedPosts.map((post) => {
-            return post.id
-        })
+        next = (posts.length > 0 && posts.length == limit) ? parseInt(offset)+parseInt(limit) : null
+        previous = offset == 0 ? null : parseInt(offset) - parseInt(limit)
         // mapear lista de fotos
-        // let _posts = mapPosts(posts.savedPosts)
-        return res.status(200).json(success(_posts))
+        if (!posts) {
+            return res.status(404).json(failure(['No hay publicaciones']))
+        }
+        
+        let _posts = mapPosts(posts)
+        _posts = _posts.map((post)=> {
+            post.postKeeper = post.postKeeper.length > 0 ? true : false
+            return post
+        })
+        res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
         res.status(500).json(failure(['Error interno']))
