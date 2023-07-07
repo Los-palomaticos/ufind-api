@@ -77,12 +77,14 @@ postController.getUserPosts = async (req, res) => {
             limit: parseInt(limit),
             offset: parseInt(offset)
         })
+        next = (posts.length > 0 && posts.length == limit) ? parseInt(offset)+parseInt(limit) : null
+        previous = offset == 0 ? null : parseInt(offset) - parseInt(limit)
         // mapear lista de fotos
         if (!posts)
             return res.status(404).json(failure(['No hay publicaciones']))
         
         let _posts = mapPosts(posts)
-        return res.status(200).json(_posts)
+        return res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
         res.status(500).json(failure(['Error interno']))
