@@ -1,16 +1,16 @@
 //config dotenv
 require('dotenv').config()
 
-
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors')
 
 var apiRouter = require('./routes/api');
 
 var app = express();
-
+app.use(cors())
 // configurar cloudinary
 require('./config/cloudinary.config');
 
