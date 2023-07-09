@@ -10,6 +10,10 @@ userController.validateToken = (req, res) => {
   return res.status(200).json(success("Sesión vigente"))
 }
 
+userController.getRole = (req, res) => {
+  return res.status(200).json(success(res.user.role))
+}
+
 userController.login = async (req, res) => {
   try {
     const { email, password } = req.body;
