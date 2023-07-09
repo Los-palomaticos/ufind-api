@@ -2,6 +2,7 @@ const User = require('../models/User.model');
 const bcrypt = require('bcrypt');
 const { getToken, failure, success } = require('../utils/utils');
 const roles = require('../data/role.data');
+const { Op } = require('sequelize');
 
 const userController = {};
 
@@ -21,6 +22,9 @@ userController.login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (passwordMatch) {
+      if (user.banned) {
+        return res.status(401).json(failure(['Cuenta restringida, contacte con el administrador']))
+      }
       const token = getToken(user);
       user.token = token;
       await user.save();
@@ -64,6 +68,23 @@ userController.getUser = async (req, res) => {
     return res.status(500).json(failure("Error interno"))
   }
 }
+
+userController.getReportedUsers = async (req, res) => {
+  try {
+    let users = await User.findAll({
+      where: {
+        reported: {
+          [Op.gt]: 0
+        }
+      }
+    })
+    return res.status(200).json(success(users))
+  } catch(e) {
+    debug(e)
+    return res.status(500).json(failure("Error interno"))
+  }
+}
+
 userController.editUser = async (req, res) => {
   try {
     const { id } = res.user;
@@ -153,7 +174,6 @@ userController.desban = async (req, res) => {
         id
       }
     });
-
     return res.status(200).json(success('Usuario desbaneado'));
   } catch (error) {
     console.error(error);

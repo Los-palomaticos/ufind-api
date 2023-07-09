@@ -21,7 +21,22 @@ router.get('/validateToken',
  * necesita:
  *  - header con token
  */
-router.get('/getBannedUsers', userController.getBannedUsers)
+router.get('/getBannedUsers',
+  authentication,
+  authorization([roles.ADMIN, roles.SUPER]),
+  userController.getBannedUsers
+)
+
+/**
+ * ruta getReportedUsers
+ * necesita:
+ *  - header con token
+ */
+router.get('/getReportedUsers', 
+  authentication,
+  authorization([roles.ADMIN, roles.SUPER]),
+  userController.getReportedUsers
+)
 
 /**
  * ruta login
@@ -99,7 +114,7 @@ router.put('/ban',
 router.put('/desban',
   authentication,
   authorization([roles.ADMIN, roles.SUPER]),
-  userController.ban
+  userController.desban
 )
 
 /**
