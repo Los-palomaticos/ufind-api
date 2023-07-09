@@ -127,4 +127,14 @@ router.get('/getUser',
   userController.getUser
 )
 
+/**
+ * ruta getRole
+ * necesita:
+ *  - header con token
+ */
+router.get('/getRole',
+  authentication,
+  userController.getRole
+)
+
 module.exports = router;
