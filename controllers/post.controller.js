@@ -50,10 +50,10 @@ postController.getAll = async (req, res) => {
             post.postKeeper = post.postKeeper.length > 0 ? true : false
             return post
         })
-        res.status(200).json(success({posts: _posts, next, previous}))
+        return res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
-        res.status(500).json(failure(['Error interno']))
+        return res.status(500).json(failure(['Error interno']))
     }
 }
 postController.getUserPosts = async (req, res) => {
@@ -87,7 +87,7 @@ postController.getUserPosts = async (req, res) => {
         return res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
-        res.status(500).json(failure(['Error interno']))
+        return res.status(500).json(failure(['Error interno']))
     }
 }
 postController.getSavedPosts = async (req, res) => {
@@ -132,10 +132,10 @@ postController.getSavedPosts = async (req, res) => {
             post.postKeeper = post.postKeeper.length > 0 ? true : false
             return post
         })
-        res.status(200).json(success({posts: _posts, next, previous}))
+        return res.status(200).json(success({posts: _posts, next, previous}))
     } catch(e) {
         debug(e)
-        res.status(500).json(failure(['Error interno']))
+        return res.status(500).json(failure(['Error interno']))
     }
 }
 postController.searchByTitleOrDescription = async (req, res) => {
@@ -169,10 +169,10 @@ postController.searchByTitleOrDescription = async (req, res) => {
         })
         // mapear lista de fotos
         let _posts = mapPosts(posts)
-        res.status(200).json(success(_posts))
+        return res.status(200).json(success(_posts))
     } catch(e) {
         debug(e)
-        res.status(500).json(failure(['Error interno']))
+        return res.status(500).json(failure(['Error interno']))
     }
 }
 postController.searchByLocation = async (req, res) => {
@@ -198,10 +198,10 @@ postController.searchByLocation = async (req, res) => {
     
         // mapear lista de fotos
         let _posts = mapPosts(posts)
-        res.status(200).json(success(_posts))
+        return res.status(200).json(success(_posts))
     } catch(e) {
         debug(e)
-        res.status(500).json(failure(['Error interno']))
+        return res.status(500).json(failure(['Error interno']))
     }
 }
 postController.getReported = async (req, res) => {
@@ -220,7 +220,9 @@ postController.getReported = async (req, res) => {
                 }
             }
         })
-        return res.status(200).json(success(posts))
+        // mapear lista de fotos
+        let _posts = mapPosts(posts)
+        return res.status(200).json(success(_posts))
     } catch(e) {
         debug(e)
         return res.status(500).json(failure(['Error interno']))
