@@ -30,7 +30,6 @@ router.get('/getAll',
 router.get('/getReported',
     authentication,
     authorization([roles.ADMIN, roles.SUPER]),
-    postValidations.report,
     runValidations,
     postController.getReported
 );
