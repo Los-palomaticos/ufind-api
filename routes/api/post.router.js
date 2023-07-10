@@ -116,7 +116,7 @@ router.delete('/delete',
  *  - header con token
  *  - id post a reportar
  */
-router.post('/report',
+router.put('/report',
     authentication,
     postValidations.report,
     runValidations,
