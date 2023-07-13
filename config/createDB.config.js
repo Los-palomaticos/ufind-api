@@ -8,53 +8,70 @@ const Message = require('../models/Message.model');
 
 (async ()=>{    
     // relacion wallet a transaccion 1 a n
-    Wallet.hasMany(Transaction, {
-        foreignKey: 'wallet_id'
-    })
     Transaction.belongsTo(Wallet, {
-        foreignKey: 'wallet_id'
+        foreignKey: {
+            name: 'wallet_id',
+            allowNull: false
+        }
     })
 
     // relacion usuario a wallet 1 a 1
-    User.hasOne(Wallet, {
-        foreignKey: 'wallet_id'
-    })
     Wallet.belongsTo(User, {
-        foreignKey: 'wallet_id'
+        foreignKey: {
+            name: 'user_id',
+            allowNull: false
+        }
     })
 
     // relacion usuario a mensaje 1 a n
     User.hasMany(Message, {
-        foreignKey: 'user_id'
-    })
-    Message.belongsTo(User, {
-        foreignKey: 'user_id'
+        foreignKey: {
+            name: 'user_id',
+            allowNull: false
+        }
     })
 
     // Relacion post y usuario n a n con tabla SavedPosts
     Post.belongsToMany(User, {
         through: SavedPost,
-        foreignKey: 'post_id'
+        foreignKey: {
+            name: 'post_id',
+            allowNull: false
+        },
+        as: "postKeeper"
     });
     User.belongsToMany(Post, {
         through: SavedPost,
-        foreignKey: 'user_id'
+        foreignKey: {
+            name: 'user_id',
+            allowNull: false
+        },
+        as: "savedPosts"
     });
-    // Movie.belongsToMany(Actor, { through: 'ActorMovies' });
+
     // Relacion entre photo y post 1 a n
     Post.hasMany(Photo,{
-        foreignKey: 'post_id'
-    })
-    Photo.belongsTo(Post, {
-        foreignKey: 'post_id'
-    })
+        foreignKey: {
+            name: 'post_id',
+            allowNull: false
+        },
+        as:'photos'
+    });
 
     // Relacion entre Usuario y Post 1 a n
     User.hasMany(Post, {
-        foreignKey: 'user_id'
+        foreignKey: {
+            name: 'user_id',
+            allowNull: false
+        },
+        as: "publisher"
     })
     Post.belongsTo(User, {
-        foreignKey: 'user_id'
+        foreignKey: {
+            name: 'user_id',
+            allowNull: false
+        },
+        as: "publisher"
     })
     
     await User.sync()
@@ -64,6 +81,13 @@ const Message = require('../models/Message.model');
     await Post.sync()
     await SavedPost.sync()
     await Photo.sync()
+    
+    // await User.create({
+    //     username: "david",
+    //     password: "david",
+    //     email: "david@david.com",
+    //     location: "UCA"
+    // })
 
-    console.log('Tables created')
+    console.log('Tables created!')
 })();

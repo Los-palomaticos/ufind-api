@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize')
 const { sequelize } = require('../config/mysql.config')
+const roles = require('../data/role.data')
 const User = sequelize.define('User', {
     username: {
         type: DataTypes.STRING(100),
@@ -24,13 +25,12 @@ const User = sequelize.define('User', {
         type: DataTypes.DATEONLY,
     },
     location: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
     },
     photo: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "user.png",
+        defaultValue: "https://res.cloudinary.com/dvbuu8u2x/image/upload/v1688187666/user_gpigol.png",
         validate: {
             isUrl: true
         }
@@ -63,6 +63,31 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
+    },
+    // Se piensa tener rol de usuario y de admin
+    role: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+        defaultValue: roles.USER
+    },
+    // tokens para que pueda ser autenticado, duracion de 1 dia
+    token: {
+        type: DataTypes.TEXT
+    }
+},
+{
+    defaultScope: {
+        attributes: {
+            exclude: ['createdAt', 'updatedAt', 'password']
+        }
+    },
+    scopes:{
+        publisher: {
+            attributes: ['username', 'id', 'reported', 'banned', 'email']
+        },
+        withPassword: {
+            exclude: ['createdAt', 'updatedAt']
+        }
     }
 });
 

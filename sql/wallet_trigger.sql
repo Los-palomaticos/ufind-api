@@ -1,0 +1,7 @@
+DELIMITER //
+CREATE OR UPDATE TRIGGER wallet_trigger AFTER INSERT ON Users
+	FOR EACH ROW
+	BEGIN
+		INSERT INTO Wallets(user_id, createdAt, updatedAt) VALUES(NEW.id, CURDATE(), CURDATE());
+	END;
+DELIMITER;

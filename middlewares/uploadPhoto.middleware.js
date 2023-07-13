@@ -1,7 +1,8 @@
 const cloudinary = require('cloudinary').v2
 const fs = require('fs')
 const debug = require('debug')('app:subir-foto-middleware');
-const {message} = require('../utils/utils')
+const {failure} = require('../utils/utils');
+const path = require('path');
 const removePhoto = (path) => {
     let response = true;
     fs.rm(path, (err)=>{
@@ -14,26 +15,31 @@ const removePhoto = (path) => {
 }
 const uploadPhoto = async (req, res, next) => {
     try {
-        let uri = ""
-        let name = req.body.name
-        let path = req.file.path
-        let uploadedPhoto = await cloudinary.uploader.upload(`${path}`, {public_id: name})
-        uri = uploadedPhoto.url
-        if (!removePhoto(path)) {
-            debug("Error al borrar imagen en los archivos internos")
-            return res.status(500).send(message("Error interno", false))
-        }
+        let paths = []
+        let files = req.files
+        // en files almacenamos las urls que nos devuelve cloudinary
+        let URIs = await Promise.all(
+            files.map(async file => {
+                paths.push(file.path)
+                let uploadedPhoto = await cloudinary.uploader.upload(`${file.path}`)
+                return uploadedPhoto.secure_url
+            })
+        )
+        paths.forEach(path => {
+            if (!removePhoto(path)) {
+                debug("Error al borrar imagen en los archivos internos")
+                return res.status(500).send(failure("Error interno"))
+            }
+        })
 
-        console.log(path)
-        if (uri === "") {
-            debug("Error al subir imagen")
-            return res.status(500).send(message("Error interno", false))
+        if (URIs.length == 0) {
+            debug("Error al subir imagen/es")
+            return res.status(500).send(failure("Error interno"))
         }
-        res.photo = uri
-        
+        res.URIs = URIs
     } catch(e) {
         debug('Error con cloudinary')
-        return res.status(500).send(message("Error interno", false))
+        return res.status(500).send(failure("Error interno"))
     }
     next()
 }
